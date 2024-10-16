@@ -1,14 +1,16 @@
-import { v4 as uuid } from "uuid";
 import AWS from "aws-sdk";
 import commonMiddleware from "../lib/commonMiddleware.mjs";
 import createError from "http-errors";
 import { getAuctionById } from "./getAuction.mjs";
+import validatorMiddleware from "@middy/validator";
+import placeBidSchema from "../lib/schemas/placeBidSchema.mjs";
+import { transpileSchema } from "@middy/validator/transpile";
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 async function placeBid(event, context) {
   const { id } = event.pathParameters;
-  const { amount } = JSON.parse(event.body);
+  const { amount } = event.body;
 
   const auction = await getAuctionById(id);
 
@@ -17,9 +19,7 @@ async function placeBid(event, context) {
   }
 
   if (amount <= auction.highestBid.amount) {
-    throw new createError.Forbidden(
-      `Your bid must be higher than ${auction.highestBid.amount}!`
-    );
+    throw new createError.Forbidden(`Your bid must be higher than ${auction.highestBid.amount}!`);
   }
 
   const params = {
@@ -48,4 +48,6 @@ async function placeBid(event, context) {
   };
 }
 
-export const handler = commonMiddleware(placeBid);
+export const handler = commonMiddleware(placeBid).use(
+  validatorMiddleware({ eventSchema: transpileSchema(placeBidSchema) }),
+);

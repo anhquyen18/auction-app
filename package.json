@@ -15,12 +15,14 @@
     "webpack": "^4.35.2"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.670.0",
+    "@aws-sdk/lib-storage": "^3.670.0",
     "@middy/core": "^5.5.0",
     "@middy/http-error-handler": "^5.5.0",
     "@middy/http-event-normalizer": "^5.5.0",
     "@middy/http-json-body-parser": "^5.5.0",
     "@middy/validator": "^5.5.0",
-    "aws-sdk": "^2.639.0",
+    "aws-sdk": "^2.1691.0",
     "http-errors": "^2.0.0",
     "uuid": "^10.0.0"
   }

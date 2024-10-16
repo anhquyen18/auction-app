@@ -42,5 +42,5 @@ export const handler = commonMiddleware(getAuctions).use(
   validatorMiddleware({
     eventSchema: transpileSchema(getAuctionsSchema),
     useDefaults: true,
-  })
+  }),
 );
